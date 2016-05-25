@@ -6,6 +6,7 @@ https://developers.intercom.io/reference
 
 ## Prequists
 This library is based on basic principal of Getters and setters. There are following prequists for this Library :
+
 1. [CodeIgniter framework](https://www.codeigniter.com/download)
 2. PHP with CURL extension
 3. Intercom's API KEY (We recomend **Full Access API key** to make full use of the given library)
@@ -24,7 +25,8 @@ Although it is developed intentionally for CodeIgniter framework but it can be u
 define BASEPATH constant somewhere before including this code
 All calls to log_message function 
 
-## At Present follwing methods are available:
+## Available Methods:
+At present we have implemented few methods and we will soon cover all of them. Also please note that all the methods accept an associtive array as a input.
 
 ### User Feature:
 
