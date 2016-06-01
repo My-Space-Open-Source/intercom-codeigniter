@@ -15,11 +15,6 @@ class Intercom {
 		log_message('Debug', 'Intercom class is loaded.');
 	}
 
-	// function __call($name,$arguments)
-	// {
-	// 	call_user_func_array(array($this->instance, $name), $arguments);
-	// }
-
 	/**
 	 *	Helper function to perform request to server and return the response
 	 */
@@ -49,8 +44,19 @@ class Intercom {
 			die($parameters.PHP_EOL.$Result.PHP_EOL.print_r($CI->curl->info,TRUE));
 		}
 		$Result=json_decode($Result,TRUE);
-		if($CI->curl->info['http_code']!=200)
-			throw new Exception($Result['errors'][0]['message'],$Result['errors'][0]['code']);
+		if($CI->curl->info['http_code']!=200){
+			$errorCode=$Result['errors'][0]['code'];
+			if(!(int) $errorCode){
+				switch($errorCode){
+					case 'conflict':
+						$errorCode=409;
+					break;
+					default:
+						$errorCode=$CI->curl->info['http_code'];
+				}
+			}
+			throw new Exception($Result['errors'][0]['message'],$errorCode);
+		}
 		return $Result;
 	}
 	/**
@@ -105,7 +111,24 @@ class Intercom {
 		return $this->getResponse($endPoint,'GET');
 	}
 	/**
-	 *	Update specified company record at Intercom
+	 *	Delete specific user at Intercom
+	 */
+	function unsetUser($parameter){
+		switch(key($parameter)){
+			case 'id':
+				$endPoint='users/'.current($parameter);
+			break;
+			case 'email':
+				$endPoint='users?email='.current($parameter);
+			break;
+			case 'user_id':
+				$endPoint='users?user_id='.current($parameter);
+			break;
+		}
+		return $this->getResponse($endPoint,'DELETE');
+	}
+	/**
+	 *	Update specified user record at Intercom
 	 */
 	function setUser($user){
 		return $this->getResponse('users','POST',$user);
@@ -137,5 +160,58 @@ class Intercom {
 	 */
 	function setTag($tag){
 		return $this->getResponse('tags','POST',$tag);
+	}
+		/**
+	 *	Get List of Leads
+	 * @param page [Required : no] 			what page of results to fetch defaults to first page.
+	 * @param per_page [Required : no] 		how many results per page defaults to 50, max is 50.
+	 * @param order [Required : no] 		asc or desc. Return the users in ascending or descending order. defaults to desc.
+	 * @param sort [Required : no] 			what field to sort the results by. Valid values: created_at, updated_at, signed_up_at.
+	 * @param created_since  [Required : no]	limit results to users that were created in that last number of days.
+	 */
+	function getLeads($parameters=FALSE){
+		$endPoint='contacts';
+		if($parameters)
+			$endPoint.='?'.http_build_query($parameters, NULL, '&');
+		return $this->getResponse($endPoint,'GET');
+	}
+	/**
+	 *	Get specific lead
+	 */
+	function getLead($parameter){
+		switch(key($parameter)){
+			case 'id':
+				$endPoint='contacts/'.current($parameter);
+			break;
+			case 'email':
+				$endPoint='contacts?email='.current($parameter);
+			break;
+			case 'user_id':
+				$endPoint='contacts?user_id='.current($parameter);
+			break;
+		}
+		return $this->getResponse($endPoint,'GET');
+	}
+	/**
+	 *	Delete specific lead at Intercom
+	 */
+	function unsetLead($parameter){
+		switch(key($parameter)){
+			case 'id':
+				$endPoint='contacts/'.current($parameter);
+			break;
+			case 'user_id':
+				$endPoint='contacts?user_id='.current($parameter);
+			break;
+		}
+		return $this->getResponse($endPoint,'DELETE');
+	}
+	/**
+	 *	Update specified lead record at Intercom
+	 *	To update lead details refer : https://developers.intercom.io/reference#update-lead
+	 *  To convert lead into a user refer : https://developers.intercom.io/reference#convert-a-lead
+	 */
+	function setLead($lead){
+		return $this->getResponse('contacts','POST',$lead);
 	}
 }

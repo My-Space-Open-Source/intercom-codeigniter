@@ -28,25 +28,37 @@ All calls to log_message function
 ## Available Methods:
 At present we have implemented few methods and we will soon cover all of them. Also please note that all the methods accept an associtive array as a input.
 
+### Lead Feature:
+
+**getLeads** - This is used to fetch paginated list of leads from Intercom App.
+
+**getLead** - This is used to fetch specified lead from Intercom App based on one of the parameter (id,user_id)
+
+**setLead** - This is used to create/update/convert lead at Intercom App
+
+**unsetLead** - This is used to delete lead record on Intercom App
+
 ### User Feature:
 
 **getUsers** - This is used to fetch paginated list of users from Intercom App.
 
 **getUser** - This is used to fetch specified user from Intercom App based on one of the parameter (id,email,user_id)
 
-**setUser** - This is used to create/uopdate user at Intercom App
+**setUser** - This is used to create/update user at Intercom App
+
+**unsetUser** - This is used to delete user record on Intercom App
 
 ### Companies Feature:
 
 **getCompanies** - This is used to fetch paginated list of companies from Intercom App.
 
-**setCompany** - This is used to create/uopdate company at Intercom App.
+**setCompany** - This is used to create/update company at Intercom App.
 
 ### Tags Feature:
 
 **getTags** - This is used to fetch paginated list of companies from Intercom App.
 
-**setTag** - This is used to create/uopdate tag at Intercom App.
+**setTag** - This is used to create/update tag at Intercom App.
 
 **removeTag** - This is used to delete specified tag from Intercom App.
 
